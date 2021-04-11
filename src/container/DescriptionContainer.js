@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import Description from '../presentation/middle/description/Description'
+import firebase from '../firebase'
 
 
 const DescriptionContainer = (props) => {
     // ---- URL location ---------------------- //
     let regex = /(?<=description\/).*/;
-    let productLink = props.pathname.match(regex)[0];
-
-    console.log(productLink)
+    let productID = props.pathname.match(regex)[0];
+    const ref = firebase.firestore().collection("data").doc(productID)
     
     let cart = props.cart
 
@@ -16,19 +16,11 @@ const DescriptionContainer = (props) => {
    
     useEffect(()=>{
         
-        async function fetchData() {
-            let res = await fetch(`/${productLink}`, {method: 'GET'});
-            let json = await res.json();
-            let data = await json.data;
-            
-            setContents(data)
-
-            return true
-        }
-
-        fetchData();
-
-    },[productLink])
+        // async function fetchData() {
+            ref.onSnapshot((querySnapshot) => {
+                setContents(querySnapshot.data());
+            })
+    },[productID])
     
 
     

@@ -2,20 +2,34 @@ import React, {useEffect, useRef, useState} from 'react'
 import './Checkout.css'
 import Confirmation from '../confirmation/Confirmation'
 
-import useCartFetch from '../../../shared/logic/useCartFetch';
+// import useCartFetch from '../../../shared/logic/useCartFetch';
 import {Link} from 'react-router-dom'
 import Form from '../../../shared/UI/Form'
 import useForm from '../../../shared/logic/useForm'
+import firebase from '../../../firebase'
 
 const Checkout = (props) => {
 
     /* -------------- PROPS, STATES, INIT DATA ------------------------- */
     const cart = props.cart;
     const [contents, setContents] = useState({});
-    useCartFetch(cart.state, contents, setContents);
+    // useCartFetch(cart.state, contents, setContents);
     const [ totalItem, totalPrice ] = cart.getCartDetails();
     const cartItems = Object.entries(cart.state);
     const [submitted, setSubmitted] = useState(false);
+    const ref = firebase.firestore().collection("data")
+
+    useEffect(() => {
+        ref.onSnapshot((querySnapshot) => {
+            const items = [];
+            querySnapshot.forEach((doc) => {
+                items.push(doc.data())
+                console.log(items);
+            });
+
+            setContents(items);
+        })
+    }, [cart])
 
     const checkoutFormFields = [
         {tag: 'custom', tagType: 'h2', content: 'MY INFO'},
@@ -49,7 +63,7 @@ const Checkout = (props) => {
 
     /* ------------------ PRESENTATION LOGIC ------------------------- */
 
-    if ((Object.keys(contents).length === 0) || (Object.keys(cart).length === 0)) {
+    if (!cartItems.length || !contents.length) {
         return <div style={{textAlign: "center", fontSize: "1.3em"}}>This page is currently not available</div>
     } else if(!submitted) { 
 
@@ -66,14 +80,16 @@ const Checkout = (props) => {
                                     <th>PRICE</th>
                                     <th>QTY</th>
                                 </tr>
-                                {cartItems.map((item) => (
-                                    <tr key={contents[item[0]].id}>
-                                        <td><img src={contents[item[0]].ImageFile} alt="cart item image"/></td>
-                                        <td>{contents[item[0]].name}</td>
-                                        <td>{contents[item[0]].price}</td>
+                                {cartItems.map((item) => {
+                                    let content = contents.find(el => el.id === item[0])
+
+                                    return (<tr key={content.id}>
+                                        <td><img src={content.ImageFile} alt="cart item image"/></td>
+                                        <td>{content.name}</td>
+                                        <td>{content.price}</td>
                                         <td>{item[1].quantity}</td>
                                     </tr>
-                                ))}
+                                )})}
                             </tbody>
                         </table>
                     </div>

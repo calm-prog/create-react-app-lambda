@@ -2,16 +2,33 @@ import React, { useEffect, useState } from 'react';
 import './Cart.css'
 import CartItem from './CartItem'
 import CartSummary from './CartSummary'
-import useCartFetch from '../../../shared/logic/useCartFetch'
+import firebase from '../../../firebase'
 
 const Cart = (props) => {
     const cart = props.cart;
+
     const [ contents, setContents ] = useState({});
-    useCartFetch(cart.state, contents, setContents);
+    // useCartFetch(cart.state, contents, setContents);
     const [ totalItem, totalPrice ] = cart.getCartDetails();
     const cartItems = Object.entries(cart.state);
+    const ref = firebase.firestore().collection("data")
 
-    if ((Object.keys(contents).length === 0) || (Object.keys(cart).length === 0)) {
+    console.log(contents);
+    console.log(cartItems);
+
+    useEffect(() => {
+        ref.onSnapshot((querySnapshot) => {
+            const items = [];
+            querySnapshot.forEach((doc) => {
+                items.push(doc.data())
+                console.log(items);
+            });
+
+            setContents(items);
+        })
+    }, [cart])
+
+    if (!cartItems.length || !contents.length) {
         
         return <div style={{textAlign: "center", fontSize: "1.3em"}}>There are no items in your cart.</div>
     } else {
@@ -21,15 +38,19 @@ const Cart = (props) => {
                 <div className="cart-title">YOUR CART</div>
                 <div className="cart-sections-wrapper">
                     <div className="cart-items-wrapper">
-                        {cartItems.map(cartItem => (
+                        {cartItems.map(cartItem => {
+                            console.log(cartItem);
+                            console.log(contents);
+                            console.log(parseInt(cartItem[0]));
+                            return (
                             <CartItem 
                             key={cartItem[0]}
                             cart = {cart}
-                            uItem={contents[cartItem[0]]}
+                            uItem={contents.find(item => item.id === cartItem[0])}
                             dispatch={props.dispatch}
                             quantity={cartItem[1].quantity}
                             />
-                        ))}
+                        )})}
                     </div>
                     <div className="cart-summary-wrapper">
                         <CartSummary 

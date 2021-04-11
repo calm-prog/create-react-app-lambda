@@ -65,7 +65,7 @@ const Description = (props) => {
                     {/* // Image ----------------------------------------------------------------------------- */}
                     <Grid item xs={12} md={6} justify="center">
                         <Box className ={classes.image_container}>
-                            <img className={classes.image} src={'../../../' + ImageFile}/>
+                            <img className={classes.image} src={ImageFile}/>
                         </Box>
                     </Grid>
                     

@@ -1,6 +1,5 @@
 import React from 'react'
 import QuantityWidget from '../../../shared/UI/QuantityWidget'
-
 import {Link} from 'react-router-dom'
 
 import {useTheme, useMediaQuery, Card, CardActionArea, CardActions, CardMedia, Typography, Box,Grid,makeStyles, CardContent} from '@material-ui/core'
@@ -50,9 +49,7 @@ const SearchResults = (props) => {
 
     const { autocompleteSuggestions, dispatch, cart } = props;
 
-    const classes = useStyles()
-
-    // console.log("Search results",cart)
+    const classes = useStyles();
     const theme = useTheme();
     const isXS = useMediaQuery(theme.breakpoints.down('xs'));
 
@@ -63,7 +60,7 @@ const SearchResults = (props) => {
                 <Grid item xs={6} sm={4} md={3} key={searchItem.id} className={classes.card_container}>
                     <Card className = {classes.card}>
                         <CardActionArea> 
-                            <Link to={`/description/${searchItem.productLink}`}
+                            <Link to={`/description/${searchItem.id}`}
                                   style={{ textDecoration: 'none'}}
                                 >
                                 <CardMedia

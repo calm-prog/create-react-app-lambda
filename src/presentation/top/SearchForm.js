@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { useLocation, useHistory } from 'react-router-dom'
 import searchIcon from '../../shared/UI/icons/search.svg'
+import firebase from '../../firebase'
 
 import {TextField, Box, makeStyles} from '@material-ui/core'
 
@@ -10,6 +11,7 @@ const SearchForm = (props) => {
     let location = useLocation();
     let history = useHistory();
     const isInitialMount = useRef(true);
+    const ref = firebase.firestore().collection("data")
 
     // Calls handleFormChange every time the inputText updates
     useEffect(() => {
@@ -49,12 +51,20 @@ const SearchForm = (props) => {
     // Function to fetch search items and dispatch to global state 
     useEffect(() => {
         if (shouldFetch) {
-            fetch('/search?name=' + inputText, {method: 'GET'})
-            .then(res => res.json())
-            .then(data => {
+            ref.onSnapshot((querySnapshot) => {
+                const items = [];
+                querySnapshot.forEach((doc) => {
+                    items.push(doc.data())
+                });
                 props.dispatch({type: 'setSearchResults', 
-                                payload: {data: data.data}});
+                                payload: {data: items}});
             })
+            // fetch('/search?name=' + inputText, {method: 'GET'})
+            // .then(res => res.json())
+            // .then(data => {
+            //     props.dispatch({type: 'setSearchResults', 
+            //                     payload: {data: data.data}});
+            // })
         }
         return () => {
             setShouldFetch(false)

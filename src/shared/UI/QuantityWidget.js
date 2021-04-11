@@ -21,9 +21,6 @@ const QuantityWidget = function(props){
     const {id, price, cartLink} = itemInfo
 
     const [quantity, setState] = useState(0)
-
-    
-    // console.log(styles.container) //, {width: widgetWidth.toString + 'px'})
     
     //--------------------------------------------------------------------
     const setQuantity = (num) => {

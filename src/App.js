@@ -56,8 +56,6 @@ const App = () => {
   const [state, dispatch] = useReducer(reducer, initState);
   const globalDispatch = dispatch;
 
-  console.log("App", state.cart)
-
   return (
     <Router>
         <div className="main-content">

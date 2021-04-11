@@ -21,10 +21,7 @@ export default class CartClass {
     editCart(id, data){
 
         let quantity = data.quantity
-        let link = data.link
         let price = this.roundOff(data.price)
-
-        // console.log(quantity, link, price)
         
         if(id in this.state){ // If item exists in cart already
           
@@ -36,11 +33,9 @@ export default class CartClass {
           } else { // i.e. if item does not exist in cart
   
             if (quantity > 0){ 
-                this.state = { ...this.state, [id]: {quantity: quantity, link: link, price: price}}
+                this.state = { ...this.state, [id]: {quantity: quantity, id: id, price: price}}
             }
           };
-
-        //   console.log(this.getCartDetails())
     }
 
 
