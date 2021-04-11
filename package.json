@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "@babel/helper-builder-react-jsx": "^7.12.13",
+    "@babel/helper-define-map": "^7.13.12",
     "@babel/plugin-transform-react-jsx": "^7.13.12",
     "@material-ui/core": "^4.11.2",
     "@material-ui/icons": "^4.11.2",
