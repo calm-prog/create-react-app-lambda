@@ -1,0 +1,32 @@
+.cart-sum-padding {
+    margin: 2em 0;
+}
+
+.item-summary {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.empty-cart {
+    background-color: #E6E0E0;
+    border: solid 0.05em;
+    font-size: 0.7rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.8em;
+    border-radius: 1em;
+    cursor: pointer;
+}
+
+.divider {
+    border-bottom: solid 0.05em;
+}
+
+.total-sum {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-weight: bold;
+}
