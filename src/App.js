@@ -13,6 +13,7 @@ import Cart from './presentation/middle/cart/Cart'
 import ServiceDesc from './presentation/middle/main/ServiceDesc'
 import Checkout from './presentation/middle/checkout/Checkout'
 import CartClass from './shared/logic/CartClass.js'
+import Confirmation from './presentation/middle/confirmation/Confirmation'
 
 // Initilazes App state object
 const initState = { 
@@ -97,10 +98,18 @@ const App = () => {
                       dispatch={globalDispatch} />
               </React.Fragment>
             )} /> 
-            {/* ------------ CONFIRMATION PAGE ------------ */}
+            {/* ------------ CHECKOUT PAGE ------------ */}
             <Route path="/checkout" render={props => (
               <React.Fragment>
-                <Checkout cart={state.cart} />
+                <Checkout cart={state.cart}
+                          dispatch={globalDispatch}
+                />
+              </React.Fragment>
+            )} /> 
+            {/* ------------ CHECKOUT PAGE ------------ */}
+            <Route path="/confirmation" render={props => (
+              <React.Fragment>
+                <Confirmation cart={state.cart}/>
               </React.Fragment>
             )} /> 
           </Switch>

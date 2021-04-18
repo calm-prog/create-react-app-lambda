@@ -51,10 +51,13 @@ const SearchForm = (props) => {
     // Function to fetch search items and dispatch to global state 
     useEffect(() => {
         if (shouldFetch) {
-            ref.onSnapshot((querySnapshot) => {
+            
+            ref.where("name", ">=", inputText).get().then((querySnapshot) => {
+                let regex = new RegExp(`${inputText}`, 'i');
+                console.log(regex);
                 const items = [];
                 querySnapshot.forEach((doc) => {
-                    items.push(doc.data())
+                    if(regex.test(doc.data().name)){items.push(doc.data())}
                 });
                 props.dispatch({type: 'setSearchResults', 
                                 payload: {data: items}});
