@@ -6,6 +6,7 @@ import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
 import InputLabel from '@material-ui/core/InputLabel';
 import FormControl from '@material-ui/core/FormControl';
+import FormHelperText from '@material-ui/core/FormHelperText';
 
 const useStyles = makeStyles({
     input: {
@@ -16,24 +17,56 @@ const useStyles = makeStyles({
 
 const Form = (props) => {
 
-    const { formFields, formState, updateFormState } = props;
+    const { formFields, formState, updateFormState, inputLengthCheck } = props;
+    // const [ validationError, setValidationError ] = useState(false);
+    // console.log(validationError)
 
     const classes = useStyles();
+
+    const validateInput = (e, field) => {
+        // if(!input){
+        //     setValidationError(true)
+        //     console.log(input);
+        // }
+        console.log(formState);
+    }
  
     return(
         <div className="form-container">
                 {formFields.map((field,index0) => {
                     switch(field.tag) {
                         case 'input':
-                            return <TextField className={classes.input} key={index0} name={field.name} value={formState[field.name]} onChange={updateFormState} type={field.type} placeholder={field.name} label={field.name} variant="outlined"/>
+                            return <TextField className={classes.input} 
+                                              key={field.fieldName} 
+                                              name={field.fieldName}
+                                              value={formState[field.fieldName].value}
+                                              onChange={(e) => {updateFormState(e)}}
+                                              onBlur={(e) => {inputLengthCheck(e)}}
+                                              type={field.type}
+                                              label={field.placeholder} 
+                                              variant="outlined"
+                                              helperText={formState[field.fieldName].errorMessage}
+                                              error={formState[field.fieldName].validationError}
+                                              inputProps={{"validate": field.validationType}}
+                                    />
                         case 'select':
-                            return (<FormControl className={classes.input} variant="outlined">
-                                        <InputLabel name="default" value={null}>{"Select a store"}</InputLabel> 
-                                        <Select key={index0} onChange={updateFormState} label="Select a store" name="store" value={formState[field.name]}>
+                            return (<FormControl className={classes.input}
+                                                 variant="outlined"
+                                                 error={formState[field.fieldName].validationError}
+                                                 >
+                                        <InputLabel name="default" value={formState[field.fieldName].value}>{field.placeholder}</InputLabel> 
+                                        <Select onChange={updateFormState}
+                                                label="Select a store"
+                                                name="store" 
+                                                value={formState[field.fieldName].value}
+                                                inputProps={{"validate": field.validationType}}
+                                                onBlur={(e) => {inputLengthCheck(e)}}
+                                                >
                                         {field.options.map((option, index1) => (
                                             <MenuItem key={index1} value={option}>{option}</MenuItem>
                                         ))}
                                         </Select>
+                                        <FormHelperText>{formState[field.fieldName].errorMessage}</FormHelperText>
                                     </FormControl>)
                         case 'custom':
                             return React.createElement(field.tagType, {key: index0.toString()}, field.content)

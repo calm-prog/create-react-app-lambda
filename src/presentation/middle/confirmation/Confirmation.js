@@ -30,7 +30,7 @@ const Confirmation = () => {
                 // doc.data() will be undefined in this case
             }        
         }).catch((error) => {
-            console.log("Error getting document:", error);
+            console.error(error);
         });
     }, [location.state])
 
@@ -44,7 +44,7 @@ const Confirmation = () => {
                     You can pick up your order at {confirmation.store} with the following order ID: {location.state}
                 </Typography>
                 <Typography variant="body2" color="textSecondary" component="p">
-                    We will send you notification to your email address{"(" + confirmation.email + ")"} once your order is ready for pickup.
+                    We will send you a notification to your email address{"(" + confirmation.email + ")"} once your order is ready for pickup.
                 </Typography>
             </CardContent>
         </Card>
