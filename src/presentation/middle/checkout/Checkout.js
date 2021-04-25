@@ -18,6 +18,7 @@ import Paper from '@material-ui/core/Paper';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import Typography from '@material-ui/core/Typography';
+import Button from '@material-ui/core/Button';
 
 const useStyles = makeStyles({
   table: {
@@ -41,6 +42,9 @@ const useStyles = makeStyles({
   },
   heading: {
       textDecoration: "underline" 
+  },
+  button: {
+      margin: "2rem 0"
   }
 });
 
@@ -93,7 +97,6 @@ const Checkout = (props) => {
             const items = [];
             querySnapshot.forEach((doc) => {
                 items.push(doc.data())
-                console.log(items);
             });
 
             setContents(items);
@@ -101,32 +104,41 @@ const Checkout = (props) => {
     }, [cart])
 
     const checkoutFormFields = [
-        {name: 'name', tag: 'input', type: 'text'},
-        {name: 'email', tag: 'input', type: 'text'},
-        {name: 'store', tag: 'select', options: ['store1', 'store2', 'store3', 'store4', 'store5']},
-        {name: 'card', tag: 'input', type: 'tel'}
+        {fieldName: 'name', tag: 'input', type: 'text', placeholder: "Name", validationType: "string"},
+        {fieldName: 'email', tag: 'input', type: 'text', placeholder: "Email address", validationType: "email"},
+        {fieldName: 'store', tag: 'select', options: ['store1', 'store2', 'store3', 'store4', 'store5'], placeholder: "Select a store", validationType: "select"},
+        {fieldName: 'card', tag: 'input', type: 'tel', placeholder: "Payment card", validationType: "number"}
     ];
 
     const checkoutKeyUrl = '/api/checkoutkey';
 
-    const [checkoutFormState, updateCheckoutFormState, encryptCheckoutFormData] = useForm(checkoutFormFields, checkoutKeyUrl);
+    const [checkoutFormState, updateCheckoutFormState, inputLengthCheck, setCheckoutFormState] = useForm(checkoutFormFields, checkoutKeyUrl);
     
     /* --------------- POSTS CHECKOUT FORM DATA ----------------------- */
     const postCheckoutFormData = async() => {
-        console.log(checkoutFormState);
         const {name, email, store, card} = checkoutFormState;
-        console.log(checkoutFormState);
-
-        orders.add({
-            name: name,
-            email: email,
-            store: store,
-            card: card
-        }).then((docRef) => {
-            console.log(docRef.id);
-            props.dispatch({type: "resetCart"});
-            history.push({pathname: '/confirmation', state: docRef.id})
-        })
+        
+        if(Object.entries(checkoutFormState).every(item => item[1].validationError === false && item[1].value.length)){
+            orders.add({
+                name: name.value,
+                email: email.value,
+                store: store.value,
+                card: card.value
+            }).then((docRef) => {
+                props.dispatch({type: "resetCart"});
+                history.push({pathname: '/confirmation', state: docRef.id})
+            })
+        } else {
+            let newState = Object.entries(checkoutFormState).reduce((obj, state) => {
+                if(!state[1].value.length) {
+                    obj[state[0]] = {...checkoutFormState[state[0]], validationError: true, errorMessage: "This field is required", errorType: "length"};
+                } else {
+                    obj[state[0]] = {...checkoutFormState[state[0]]};
+                }
+                return obj
+            }, {})
+            setCheckoutFormState(newState);
+        }
     }
 
     /* ------------------ PRESENTATION LOGIC ------------------------- */
@@ -148,7 +160,7 @@ const Checkout = (props) => {
                             </Typography>
                         <TableContainer component={Paper}>
 
-                            <Table aria-label="spanning table">
+                            <Table aria-placeholder="spanning table">
                                 <TableHead>
                                     <TableRow>
                                         <TableCell align="center" colSpan={3}>
@@ -166,12 +178,11 @@ const Checkout = (props) => {
                                 <TableBody>
                                 {cartItems.map((item) => {
                                     let content = contents.find(el => el.id === item[0])
-
                                     return (<TableRow key={content.id}>
                                         <TableCell><img src={content.ImageFile} className={classes.small}></img></TableCell>
-                                        <TableCell align="right">{content.name}</TableCell>
+                                        <TableCell align="right">{item[1].quantity}</TableCell>
+                                        <TableCell align="right">{content.unit}</TableCell>
                                         <TableCell align="right">{content.price}</TableCell>
-                                        <TableCell align="right">{item[0].quantity}</TableCell>
                                     </TableRow>)
                                 })}
 
@@ -205,16 +216,20 @@ const Checkout = (props) => {
                                 formFields={checkoutFormFields}
                                 formState={checkoutFormState}
                                 updateFormState={updateCheckoutFormState}
+                                inputLengthCheck={inputLengthCheck}
                             />
                         </CardContent>
                     </Card>
 
                 </div>
                 <div className="checkout-nav">
-                    <Link to="/cart" style={{ textDecoration: 'none' }}><div className="back-to-cart-btn checkout-nav-btn">BACK TO CART</div></Link>
-                    <div className="pay-btn checkout-nav-btn" 
-                         onClick={() => postCheckoutFormData()}>PAY
-                    </div>
+                    <Link to="/cart" style={{ textDecoration: 'none' }}>
+                        <Button variant="contained" className={classes.button}>BACK TO CART</Button>
+                    </Link>
+                    <Button variant="contained"
+                            className={classes.button}
+                            onClick={() => postCheckoutFormData()}>PAY
+                    </Button>
                 </div>
             </React.Fragment>
         )
