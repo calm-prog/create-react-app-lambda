@@ -38,3 +38,16 @@
     cursor: pointer;
 }
 
+@media (max-width: 768px){
+    .cart-summary {
+        width: 95%;
+    }
+
+    .checkout-form {
+        width: 95%;
+    }
+
+    .checkout-nav {
+        width: 90%;
+    }
+}

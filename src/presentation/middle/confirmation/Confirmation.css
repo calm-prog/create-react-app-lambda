@@ -1,5 +1,11 @@
 .confirmation-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+    margin: auto;
+    max-width: 60%;
+}
+
+@media (max-width: 768px){
+    .confirmation-container {
+        margin: auto;
+        max-width: 90%;
+    }
 }
