@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { motion, useAnimation} from "framer-motion"
-
+import './ServiceDesc.css'
 
 
 
@@ -32,11 +32,14 @@ const ServiceDesc = (props) => {
     
 
     return (
-        <div style = {{ height: '100px', 
+        <div className="motion-text-wrapper"
+             style = {{ height: '100px', 
                         marginTop: '100px',
                         display: 'flex',
                         justifyContent: 'center',
-                        alignItems: 'center'}}>
+                        alignItems: 'center',
+                        margin: "auto",
+                        textAlign: "center"}}>
 
         <motion.p initial = "shrunk" 
                     animate = {controls} 
