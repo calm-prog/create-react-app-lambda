@@ -13,15 +13,11 @@ const Cart = (props) => {
     const cartItems = Object.entries(cart.state);
     const ref = firebase.firestore().collection("data")
 
-    console.log(contents);
-    console.log(cartItems);
-
     useEffect(() => {
         ref.onSnapshot((querySnapshot) => {
             const items = [];
             querySnapshot.forEach((doc) => {
                 items.push(doc.data())
-                console.log(items);
             });
 
             setContents(items);
@@ -39,9 +35,6 @@ const Cart = (props) => {
                 <div className="cart-sections-wrapper">
                     <div className="cart-items-wrapper">
                         {cartItems.map(cartItem => {
-                            console.log(cartItem);
-                            console.log(contents);
-                            console.log(parseInt(cartItem[0]));
                             return (
                             <CartItem 
                             key={cartItem[0]}
