@@ -18,18 +18,8 @@ const useStyles = makeStyles({
 const Form = (props) => {
 
     const { formFields, formState, updateFormState, inputLengthCheck } = props;
-    // const [ validationError, setValidationError ] = useState(false);
-    // console.log(validationError)
 
     const classes = useStyles();
-
-    const validateInput = (e, field) => {
-        // if(!input){
-        //     setValidationError(true)
-        //     console.log(input);
-        // }
-        console.log(formState);
-    }
  
     return(
         <div className="form-container">

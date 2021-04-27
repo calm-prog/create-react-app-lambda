@@ -52,22 +52,17 @@ const SearchForm = (props) => {
     useEffect(() => {
         if (shouldFetch) {
             
-            ref.where("name", ">=", inputText).get().then((querySnapshot) => {
-                let regex = new RegExp(`${inputText}`, 'i');
-                console.log(regex);
+            ref.get().then((querySnapshot) => {
+                let regex = new RegExp(`^${inputText}`, "i");
                 const items = [];
                 querySnapshot.forEach((doc) => {
-                    if(regex.test(doc.data().name)){items.push(doc.data())}
+                    if(regex.test(doc.data().name)){
+                        items.push(doc.data())
+                    }
                 });
                 props.dispatch({type: 'setSearchResults', 
                                 payload: {data: items}});
             })
-            // fetch('/search?name=' + inputText, {method: 'GET'})
-            // .then(res => res.json())
-            // .then(data => {
-            //     props.dispatch({type: 'setSearchResults', 
-            //                     payload: {data: data.data}});
-            // })
         }
         return () => {
             setShouldFetch(false)
