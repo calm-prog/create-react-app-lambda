@@ -119,15 +119,17 @@ const Checkout = (props) => {
         const {name, email, store, card} = checkoutFormState;
         
         if(Object.entries(checkoutFormState).every(item => item[1].validationError === false && item[1].value.length)){
-            orders.add({
-                name: name.value,
-                email: email.value,
-                store: store.value,
-                card: card.value
-            }).then((docRef) => {
-                props.dispatch({type: "resetCart"});
-                history.push({pathname: '/confirmation', state: docRef.id})
-            })
+            // orders.add({
+            //     name: name.value,
+            //     email: email.value,
+            //     store: store.value,
+            //     card: card.value
+            // }).then((docRef) => {
+            //     props.dispatch({type: "resetCart"});
+            //     history.push({pathname: '/confirmation', state: {name, email, store}})
+            // })
+            // props.dispatch({type: "resetCart"});
+            history.push('/confirmation', {name: name.value, email: email.value, store: store.value})
         } else {
             let newState = Object.entries(checkoutFormState).reduce((obj, state) => {
                 if(!state[1].value.length) {

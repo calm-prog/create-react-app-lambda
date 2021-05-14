@@ -8,36 +8,48 @@ import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import { AutorenewTwoTone } from '@material-ui/icons';
 
+function makeid(length) {
+    var result           = [];
+    var characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    var charactersLength = characters.length;
+    for ( var i = 0; i < length; i++ ) {
+      result.push(characters.charAt(Math.floor(Math.random() * 
+ charactersLength)));
+   }
+   return result.join('');
+}
+
 const Confirmation = () => {
-    const [confirmation, setConfirmation] = useState({name: "", email: "", store: ""});
+    // const [confirmation, setConfirmation] = useState({name: "", email: "", store: ""});
     const location = useLocation();
     const ref = firebase.firestore().collection("orders");
+    const {name, email, store} = location.state;
 
-    useEffect(() => {
-        ref.doc(location.state).get().then((doc) => {
-            if (doc.exists) {
-                const {name, email, store} = doc.data();
-                setConfirmation({name: name.split(' ')[0], email: email, store: store})
-            } else {
-                // doc.data() will be undefined in this case
-            }        
-        }).catch((error) => {
-            console.error(error);
-        });
-    }, [location.state])
+    // useEffect(() => {
+    //     ref.doc(location.state).get().then((doc) => {
+    //         if (doc.exists) {
+    //             const {name, email, store} = doc.data();
+    //             setConfirmation({name: name.split(' ')[0], email: email, store: store})
+    //         } else {
+    //             // doc.data() will be undefined in this case
+    //         }        
+    //     }).catch((error) => {
+    //         console.error(error);
+    //     });
+    // }, [location.state])
 
     return(
         <div className="confirmation-container">
             <Card>
                 <CardContent>
                     <Typography gutterBottom variant="h5" component="h2">
-                        Thank you {confirmation.name} for your order!
+                        Thank you {name.split(" ")[0]} for your order!
                     </Typography>
                     <Typography variant="body2" color="textSecondary" component="p">
-                        You can pick up your order at {confirmation.store} with the following order ID: {location.state}
+                        You can pick up your order at {store} with the following order ID: {makeid(10)}
                     </Typography>
                     <Typography variant="body2" color="textSecondary" component="p">
-                        We will send you a notification to your email address{"(" + confirmation.email + ")"} once your order is ready for pickup.
+                        We will send you a notification to your email address{"(" + email + ")"} once your order is ready for pickup.
                     </Typography>
                 </CardContent>
             </Card>
