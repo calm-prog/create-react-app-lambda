@@ -8,7 +8,9 @@ import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import { AutorenewTwoTone } from '@material-ui/icons';
 
-function makeid(length) {
+
+
+function makeid(length: number) {
     var result           = [];
     var characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
     var charactersLength = characters.length;
@@ -19,9 +21,15 @@ function makeid(length) {
    return result.join('');
 }
 
-const Confirmation = () => {
+interface Props {
+    name: string,
+    email: string,
+    store: string
+}
+
+const Confirmation: React.FC = () => {
     // const [confirmation, setConfirmation] = useState({name: "", email: "", store: ""});
-    const location = useLocation();
+    const location = useLocation<Props>();
     const ref = firebase.firestore().collection("orders");
     const {name, email, store} = location.state;
 
