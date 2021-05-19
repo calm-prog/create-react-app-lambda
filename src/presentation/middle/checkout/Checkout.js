@@ -128,7 +128,7 @@ const Checkout = (props) => {
             //     props.dispatch({type: "resetCart"});
             //     history.push({pathname: '/confirmation', state: {name, email, store}})
             // })
-            // props.dispatch({type: "resetCart"});
+            props.dispatch({type: "resetCart"});
             history.push('/confirmation', {name: name.value, email: email.value, store: store.value})
         } else {
             let newState = Object.entries(checkoutFormState).reduce((obj, state) => {
