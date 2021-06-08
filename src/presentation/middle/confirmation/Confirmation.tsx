@@ -11,12 +11,11 @@ import { AutorenewTwoTone } from '@material-ui/icons';
 
 
 function makeid(length: number) {
-    var result           = [];
-    var characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-    var charactersLength = characters.length;
-    for ( var i = 0; i < length; i++ ) {
-      result.push(characters.charAt(Math.floor(Math.random() * 
- charactersLength)));
+    let result           = [];
+    let characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    let charactersLength = characters.length;
+    for ( let i = 0; i < length; i++ ) {
+      result.push(characters.charAt(Math.floor(Math.random() * charactersLength)));
    }
    return result.join('');
 }
@@ -30,7 +29,7 @@ interface Props {
 const Confirmation: React.FC = () => {
     // const [confirmation, setConfirmation] = useState({name: "", email: "", store: ""});
     const location = useLocation<Props>();
-    const ref = firebase.firestore().collection("orders");
+    // const ref = firebase.firestore().collection("orders");
     const {name, email, store} = location.state;
 
     // useEffect(() => {

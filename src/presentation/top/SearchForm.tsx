@@ -5,12 +5,16 @@ import firebase from '../../firebase'
 
 import {TextField, Box, makeStyles} from '@material-ui/core'
 
-const SearchForm = (props) => {
-    const [ inputText, setInputText ] = useState(['']);
-    const [ shouldFetch, setShouldFetch ] = useState(false);
+interface Props {
+    dispatch: ({}) => void; 
+}
+
+const SearchForm: React.FC<Props> = ({dispatch}) => {
+    const [ inputText, setInputText ] = useState<string | string[]>(['']);
+    const [ shouldFetch, setShouldFetch ] = useState<boolean>(false);
     let location = useLocation();
     let history = useHistory();
-    const isInitialMount = useRef(true);
+    const isInitialMount = useRef<boolean>(true);
     const ref = firebase.firestore().collection("data")
 
     // Calls handleFormChange every time the inputText updates
@@ -37,12 +41,12 @@ const SearchForm = (props) => {
         } 
         else if (inputText.length > 1) {
             const regex = new RegExp(`${inputText}`, 'i');
-            return props.dispatch({ 
+            return dispatch({ 
                 type: 'setAutocomplete',
                 payload: { regex: regex }
             })
         } else {
-            return props.dispatch({ 
+            return dispatch({ 
                 type: 'resetAutocomplete'
             })
         }
@@ -51,16 +55,15 @@ const SearchForm = (props) => {
     // Function to fetch search items and dispatch to global state 
     useEffect(() => {
         if (shouldFetch) {
-            
             ref.get().then((querySnapshot) => {
                 let regex = new RegExp(`^${inputText}`, "i");
-                const items = [];
+                const items: any = [];
                 querySnapshot.forEach((doc) => {
                     if(regex.test(doc.data().name)){
                         items.push(doc.data())
                     }
                 });
-                props.dispatch({type: 'setSearchResults', 
+                dispatch({type: 'setSearchResults', 
                                 payload: {data: items}});
             })
         }
@@ -82,24 +85,17 @@ const SearchForm = (props) => {
     const classes = useStyles()
 
     return (
-
         <Box className = {classes.search_box_container}>
-            <TextField value = {inputText} 
+            <TextField  value = {inputText} 
                         label = "Search for a food item"
                         variant="outlined"
                         className = {classes.search_box}
-                        //    inputProps={{ style: {textAlign: 'center', height: '100%', fontSize: 20} }}
-                        //    className = {styles.textBox}
-                        //    margin = 'none'
-                        onChange={(e) => setInputText(e.target.value)} 
-                />
+                        onChange={(e) => setInputText(e.target.value)}
+            />
         </Box>
-     
     )
         
 }
-
-
 
 const useStyles = makeStyles((theme)=>({
     search_box_container:{
@@ -116,6 +112,5 @@ const useStyles = makeStyles((theme)=>({
         }
     },
 }))
-
             
 export default SearchForm
