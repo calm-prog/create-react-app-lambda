@@ -1,8 +1,8 @@
-import React from 'react'
+import {useState} from 'react'
 import QuantityWidget from '../../../shared/UI/QuantityWidget'
 import {Link} from 'react-router-dom'
 
-import {useTheme, useMediaQuery, Card, CardActionArea, CardActions, CardMedia, Typography, Box,Grid,makeStyles, CardContent} from '@material-ui/core'
+import {useTheme, useMediaQuery, Card, CardActionArea, CardActions, CardMedia, Typography, Box,Grid,makeStyles, LinearProgress} from '@material-ui/core'
 
 
 const useStyles = makeStyles((theme)=>({
@@ -34,11 +34,31 @@ const useStyles = makeStyles((theme)=>({
         alignItems: 'center',
         flexDirection: 'column',
     },
-    image:{
+    cardMedia:{
         paddingTop: '100%',
         width: '100%'
     },
-
+    image: {
+        width: "100%",
+        position: "absolute",
+        top: "10%",
+        transition: "1s",
+        opacity: "0"
+    },
+    showImg: {
+        opacity: "1"
+    },
+    loadingAnimation: {
+        position: "absolute",
+        top: "40%",
+        width: "100%",
+        padding: "0 20%",
+        opacity: "50%",
+        transform: "scale(0.8)"
+    },
+    hide: {
+        display: "none"
+    },
     test:{backgroundColor:'red', marginTop: 0},
     textbox:{padding: '5% 5% 5% 5%'},
 }))
@@ -52,6 +72,7 @@ const SearchResults = (props) => {
     const classes = useStyles();
     const theme = useTheme();
     const isXS = useMediaQuery(theme.breakpoints.down('xs'));
+    const [imageLoaded, setImageLoaded] = useState(false);
 
     return (
     <Box className = {classes.outerContain}>
@@ -63,11 +84,19 @@ const SearchResults = (props) => {
                             <Link to={`/description/${searchItem.id}`}
                                   style={{ textDecoration: 'none'}}
                                 >
-                                <CardMedia
-                                    className={classes.image}
-                                    image={searchItem.ImageFile}
-                                    title={searchItem.name}
-                                />
+                                    <CardMedia
+                                        className={classes.cardMedia}
+                                        title={searchItem.name}
+
+                                    >
+                                        <img className={classes.image + " " + (imageLoaded && classes.showImg)} src={searchItem.ImageFile} onLoad={() => setImageLoaded(true)}></img>
+                                        <div className={classes.loadingAnimation + " " + (imageLoaded && classes.hide)}>
+                                            <LinearProgress /><br></br>
+                                            <LinearProgress /><br></br>
+                                            <LinearProgress />
+                                        </div>
+
+                                    </CardMedia>
                                 
                                 <Box className={classes.textbox}>
                                     <Typography variant='body1' >  {searchItem.name} </Typography>
